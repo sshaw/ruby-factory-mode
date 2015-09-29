@@ -1,0 +1,5 @@
+#name: factory :model do ... end
+# --
+factory :${1:`(if (buffer-file-name) (singularize-string (file-name-base (buffer-file-name)))) "model"`} do
+  $0
+end

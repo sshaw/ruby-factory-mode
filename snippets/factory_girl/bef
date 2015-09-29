@@ -1,0 +1,5 @@
+#name: before :create do |model| ... end
+# --
+before :create do |${1:`(if (buffer-file-name) (singularize-string (file-name-base (buffer-file-name))) "model")`}|
+  $0
+end

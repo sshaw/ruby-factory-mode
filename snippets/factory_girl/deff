@@ -1,0 +1,5 @@
+#name: FactoryGirl.define do ... end
+# --
+FactoryGirl.define do
+  $0
+end
