@@ -8,7 +8,7 @@ Pull requests welcome!
 
 ## Requirements
 
-`inflections`, [YASnippet](https://github.com/capitaomorte/yasnippet) (optional).
+`inflections`, [YASnippet](https://github.com/capitaomorte/yasnippet).
 
 ## Usage
 
@@ -20,7 +20,7 @@ Pull requests welcome!
 
 ### Snippets
 
-sdfsf
+#### factory_girl
 
 Binding | Snippet
 --------|------------------------------------|
@@ -28,5 +28,19 @@ Binding | Snippet
 `deff`  | `FactoryGirl.define do ... end`    |
 `fac`   | `factory :model do ... end`        |
 `seq`   | `sequence(:attribute) { |i| ... }` |
+
+...
+
+#### Fabrication
+
+Binding | Snippet
+--------|-----------------------------------------|
+`aft`   | `after_hook do |model| ... end`         |
+`aftb`  | `after_build do |model| ... end`        |
+`aftc`  | `after_create do |model| ... end`       |
+`aftv`  | `after_validation do |model| ... end`   |
+`fab`   | `Fabricator :model do ... end`          |
+`seq`   | `sequence(:attribute) { |i| ... }`      |
+`tra`   | `transient :attribute`                  |
 
 ...

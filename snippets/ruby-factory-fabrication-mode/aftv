@@ -1,0 +1,5 @@
+#name: after_validation do |model| ... end
+# --
+after_validation do |${1:`(if (buffer-file-name) (singularize-string (file-name-base (buffer-file-name))) "model")`}|
+  $0
+end

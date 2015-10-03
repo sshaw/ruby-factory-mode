@@ -1,0 +1,5 @@
+#name: after_hook do |model| ... end
+# --
+after_${1:$$(yas-choose-value '("build" "create" "save" "validation"))} do |${2:`(if (buffer-file-name) (singularize-string (file-name-base (buffer-file-name))) "model")`}|
+  $0
+end

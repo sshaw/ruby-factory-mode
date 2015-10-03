@@ -1,0 +1,3 @@
+#name: sequence(:attribute) { |i| ... }
+# --
+sequence(:${1:attribute}) { |i| $0 }
