@@ -1,5 +1,6 @@
+# -*- mode: snippet -*-
 #name: after_create do |model| ... end
 # --
-after_create do |${1:`(if (buffer-file-name) (singularize-string (file-name-base (buffer-file-name))) "model")`}|
+after_create do |${1:`(ruby-factory-mode--yas-fabrication-model-name)`}|
   $0
 end

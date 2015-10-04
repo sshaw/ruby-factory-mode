@@ -1,6 +1,6 @@
 # ruby-factory-mode
 
-Minor mode for Ruby test object generation libraries. Currently supports
+Emacs minor mode for Ruby test object generation libraries. Currently supports
 [factory_girl](https://github.com/thoughtbot/factory_girl) and [Fabrication](https://github.com/paulelliott/fabrication)
 and only under Rails.
 
@@ -8,7 +8,8 @@ Pull requests welcome!
 
 ## Requirements
 
-`inflections`, [YASnippet](https://github.com/capitaomorte/yasnippet).
+* [inflections](https://github.com/eschulte/jump.el)
+* If you want to use the snippets you'll need [YASnippet](https://github.com/capitaomorte/yasnippet)  `v0.8.1` or greater
 
 ## Usage
 
@@ -25,11 +26,17 @@ Pull requests welcome!
 Binding | Snippet
 --------|------------------------------------|
 `aft`   | `after :hook do |model| ... end`   |
+`aftb`  | `after :before do |model| ... end` |
+`aftc`  | `after :create do |model| ... end` |
+`afts`  | `after :stub do |model| ... end`   |
+`bef`   | `before :create do |model| ... end`|
 `deff`  | `FactoryGirl.define do ... end`    |
 `fac`   | `factory :model do ... end`        |
+`initw` | `initialize_with { ... }`          |
 `seq`   | `sequence(:attribute) { |i| ... }` |
+`trai`  | `trait :attribute do ... end`      |
+`tran`  | `transient do ... end`             |
 
-...
 
 #### Fabrication
 
@@ -40,7 +47,19 @@ Binding | Snippet
 `aftc`  | `after_create do |model| ... end`       |
 `aftv`  | `after_validation do |model| ... end`   |
 `fab`   | `Fabricator :model do ... end`          |
+`initw` | `initialize_with { ... }`               |
 `seq`   | `sequence(:attribute) { |i| ... }`      |
-`tra`   | `transient :attribute`                  |
+`tran`  | `transient :attribute`                  |
 
-...
+## See Also
+
+* [rspec-mode](https://github.com/pezra/rspec-mode)
+
+## TODO
+
+* Non-Rails projects
+* More sophisticated snippets
+
+## Author
+
+Skye Shaw (skye.shaw ~AT~ gmail.com)

@@ -1,5 +1,6 @@
+# -*- mode: snippet -*-
 #name: after :hook do |model| ... end
 # --
-after :${1:$$(yas-choose-value '("build" "create" "stub"))} do |${2:`(if (buffer-file-name) (singularize-string (file-name-base (buffer-file-name))) "model")`}|
+after :${1:$$(yas-choose-value '("build" "create" "stub"))} do |${2:`(ruby-factory-mode--yas-factory-girl-model)`}|
   $0
 end

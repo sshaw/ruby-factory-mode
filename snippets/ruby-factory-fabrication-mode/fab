@@ -1,5 +1,6 @@
+# -*- mode: snippet -*-
 #name: Fabricator :model do ... end
 # --
-Fabricator :${1:`(if (buffer-file-name) (singularize-string (file-name-base (buffer-file-name))) "model")`} do
+Fabricator :${1:`(ruby-factory-mode--yas-fabrication-model-name)`} do
   $0
 end

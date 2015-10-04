@@ -26,11 +26,16 @@
 
 ;;; Commentary:
 
-;;;
+;; Emacs minor mode for Ruby test object generation libraries.
+;; Currently supports factory_girl and Fabrication and only under Rails (for now).
+;;
+;; Allows one to switch between factory and backing class and provides
+;; snippets for all supported libraries via YASnippet.
+
+;;; Code:
 
 (require 'inflections)
 
-;; TODO: Windows issues, Non-Rails projects, namespaces
 (defconst ruby-factory-mode--model-regex "\\(.+\\)/app/models/\\(.+\\)\\.rb\\'")
 (defconst ruby-factory-mode--factory-regex "\\(.+\\)/\\(?:test\\|spec\\)/\\(factories\\|fabricators\\)/\\(.+\\)\\.rb\\'")
 
@@ -46,9 +51,7 @@
 \\{ruby-factory-mode-map}"
   :lighter " Factory" :keymap ruby-factory-mode-map
   (when ruby-factory-girl-mode
-    (setq ruby-factory-mode--finder 'ruby-factory-mode--find-factory-girl-model)
-    (when (fboundp 'yas-activate-extra-mode)
-      (yas-activate-extra-mode 'ruby-factory-girl-mode))))
+    (setq ruby-factory-mode--finder 'ruby-factory-mode--find-factory-girl-model)))
 
 (define-minor-mode ruby-factory-fabrication-mode
     "Minor mode for the Ruby Fabrication object generation library
@@ -56,9 +59,7 @@
 \\{ruby-factory-mode-map}"
   :lighter " Fabrication" :keymap ruby-factory-mode-map
   (when ruby-factory-fabrication-mode
-    (setq ruby-factory-mode--finder 'ruby-factory-mode--find-fabrication-model)
-    (when (fboundp 'yas-activate-extra-mode)
-      (yas-activate-extra-mode 'ruby-factory-fabrication-mode))))
+    (setq ruby-factory-mode--finder 'ruby-factory-mode--find-fabrication-model)))
 
 (define-minor-mode ruby-factory-mode
   "Minor mode for Ruby test object generation libraries
@@ -147,6 +148,18 @@
       (ruby-factory-girl-mode))
      ((ruby-factory-mode--fabrication-p)
       (ruby-factory-fabrication-mode)))))
+
+;; YASnippet helpers
+;; ----
+;; TODO: get "model" from outter factory definition
+(defun ruby-factory-mode--yas-factory-girl-model-name ()
+  (if (buffer-file-name) (singularize-string (file-name-base (buffer-file-name))) "model"))
+
+(defun ruby-factory-mode--yas-fabrication-model-name ()
+  (if (buffer-file-name) (replace-regexp-in-string "_fabricator\.rb\\'" ""
+						   (file-name-base (buffer-file-name)))
+    "model"))
+;; ---
 
 (defun ruby-factory-mode-switch-to-buffer ()
   (interactive)

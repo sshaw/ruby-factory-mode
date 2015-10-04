@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+#name: transient do ... end
+# --
+transient do
+  $0
+end

@@ -1,3 +1,4 @@
+# -*- mode: snippet -*-
 #name: transient :attribute
 # --
 transient :${1:attribute}$0
