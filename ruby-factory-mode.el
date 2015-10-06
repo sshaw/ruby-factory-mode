@@ -29,7 +29,7 @@
 ;; Emacs minor mode for Ruby test object generation libraries.
 ;; Currently supports factory_girl and Fabrication and only under Rails (for now).
 ;;
-;; Allows one to switch between factory and backing class and provides
+;; Allows one to switch between factory and backing class, and provides
 ;; snippets for all supported libraries via YASnippet.
 
 ;;; Code:
@@ -38,6 +38,10 @@
 
 (defconst ruby-factory-mode--model-regex "\\(.+\\)/app/models/\\(.+\\)\\.rb\\'")
 (defconst ruby-factory-mode--factory-regex "\\(.+\\)/\\(?:test\\|spec\\)/\\(factories\\|fabricators\\)/\\(.+\\)\\.rb\\'")
+
+(defvar ruby-factory--snippets nil)
+(setq ruby-factory--snippets
+      (expand-file-name "snippets" (file-name-directory (or load-file-name (buffer-file-name)))))
 
 (make-variable-buffer-local
  (defvar ruby-factory-mode--finder 'ruby-factory-mode--find-factory))
@@ -51,7 +55,8 @@
 \\{ruby-factory-mode-map}"
   :lighter " Factory" :keymap ruby-factory-mode-map
   (when ruby-factory-girl-mode
-    (setq ruby-factory-mode--finder 'ruby-factory-mode--find-factory-girl-model)))
+    (setq ruby-factory-mode--finder 'ruby-factory-mode--find-factory-girl-model)
+    (ruby-factory-mode--load-snippets 'ruby-factory-girl-mode)))
 
 (define-minor-mode ruby-factory-fabrication-mode
     "Minor mode for the Ruby Fabrication object generation library
@@ -59,7 +64,8 @@
 \\{ruby-factory-mode-map}"
   :lighter " Fabrication" :keymap ruby-factory-mode-map
   (when ruby-factory-fabrication-mode
-    (setq ruby-factory-mode--finder 'ruby-factory-mode--find-fabrication-model)))
+    (setq ruby-factory-mode--finder 'ruby-factory-mode--find-fabrication-model)
+    (ruby-factory-mode--load-snippets 'ruby-factory-fabrication-mode)))
 
 (define-minor-mode ruby-factory-mode
   "Minor mode for Ruby test object generation libraries
@@ -98,12 +104,18 @@
   (concat (ruby-factory-mode--build-path root "fabricators")
 	  (concat name "_fabricator.rb")))
 
+(defun ruby-factory-mode--factory-girl-model-name (name)
+  (singularize-string name))
+
 (defun ruby-factory-mode--factory-girl-model-path (root name)
-  (ruby-factory-mode--model-path root (singularize-string name)))
+  (ruby-factory-mode--model-path root (ruby-factory-mode--factory-girl-model-name name)))
+
+
+(defun ruby-factory-mode--fabrication-model-name (name)
+  (replace-regexp-in-string  "_fabricator\\'" "" name t))
 
 (defun ruby-factory-mode--fabrication-model-path (root name)
-  (ruby-factory-mode--model-path root (replace-regexp-in-string
-				       "_fabricator\\'" "" name t)))
+  (ruby-factory-mode--model-path root (ruby-factory-mode--fabrication-model-name name)))
 
 (defun ruby-factory-mode--find-model (factory-path action)
   (when (string-match ruby-factory-mode--factory-regex factory-path)
@@ -139,6 +151,13 @@
 	      (throw 'break factory-path))))
       nil))))
 
+(defun ruby-factory-mode--load-snippets (mode)
+  (when (require 'yasnippet nil t)
+    (yas-load-directory ruby-factory--snippets)
+    (yas-activate-extra-mode mode)
+
+    (add-to-list 'yas-snippet-dirs ruby-factory--snippets t)))
+
 (defun ruby-factory-mode--maybe-enable ()
   (when (buffer-file-name)
     (cond
@@ -153,11 +172,13 @@
 ;; ----
 ;; TODO: get "model" from outter factory definition
 (defun ruby-factory-mode--yas-factory-girl-model-name ()
-  (if (buffer-file-name) (singularize-string (file-name-base (buffer-file-name))) "model"))
+  (if (buffer-file-name)
+      (ruby-factory-mode--factory-girl-model-name (file-name-base (buffer-file-name)))
+    "model"))
 
 (defun ruby-factory-mode--yas-fabrication-model-name ()
-  (if (buffer-file-name) (replace-regexp-in-string "_fabricator\.rb\\'" ""
-						   (file-name-base (buffer-file-name)))
+  (if (buffer-file-name)
+      (ruby-factory-mode--fabrication-model-name (file-name-base (buffer-file-name)))
     "model"))
 ;; ---
 
