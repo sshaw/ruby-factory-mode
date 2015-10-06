@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+#name: factory $0 do ... end
+# --
+factory :${1:`(ruby-factory--yas-factory-girl-model-name)`} do
+  $0
+end

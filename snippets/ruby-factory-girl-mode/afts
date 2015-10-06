@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 #name: after :stub do |model| ... end
 # --
-after :stub do |${1:`(ruby-factory-mode--yas-factory-girl-model)`}|
+after :stub do |${1:`(ruby-factory--yas-factory-girl-model-name)`}|
   $0
 end

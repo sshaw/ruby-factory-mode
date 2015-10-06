@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 #name: after :build do |model| ... end
 # --
-after :build do |${1:`(ruby-factory-mode--yas-factory-girl-model)`}|
+after :build do |${1:`(ruby-factory--yas-factory-girl-model-name)`}|
   $0
 end

@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 #name: before :create do |model| ... end
 # --
-before :create do |${1:`(ruby-factory-mode--yas-factory-girl-model)`}|
+before :create do |${1:`(ruby-factory--yas-factory-girl-model-name)`}|
   $0
 end

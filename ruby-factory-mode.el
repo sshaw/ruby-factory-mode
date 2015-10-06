@@ -36,18 +36,18 @@
 
 (require 'inflections)
 
-(defconst ruby-factory-mode--model-regex "\\(.+\\)/app/models/\\(.+\\)\\.rb\\'")
-(defconst ruby-factory-mode--factory-regex "\\(.+\\)/\\(?:test\\|spec\\)/\\(factories\\|fabricators\\)/\\(.+\\)\\.rb\\'")
+(defconst ruby-factory--model-regex "\\(.+\\)/app/models/\\(.+\\)\\.rb\\'")
+(defconst ruby-factory--factory-regex "\\(.+\\)/\\(?:test\\|spec\\)/\\(factories\\|fabricators\\)/\\(.+\\)\\.rb\\'")
 
 (defvar ruby-factory--snippets nil)
 (setq ruby-factory--snippets
       (expand-file-name "snippets" (file-name-directory (or load-file-name (buffer-file-name)))))
 
 (make-variable-buffer-local
- (defvar ruby-factory-mode--finder 'ruby-factory-mode--find-factory))
+ (defvar ruby-factory--finder 'ruby-factory--find-factory))
 
 (define-prefix-command 'ruby-factory-mode-map)
-(define-key 'ruby-factory-mode-map (kbd "C-c f t") 'ruby-factory-mode-switch-to-buffer)
+(define-key 'ruby-factory-mode-map (kbd "C-c f t") 'ruby-factory-switch-to-buffer)
 
 (define-minor-mode ruby-factory-girl-mode
   "Minor mode for the Ruby factory_girl object generation library
@@ -55,8 +55,8 @@
 \\{ruby-factory-mode-map}"
   :lighter " Factory" :keymap ruby-factory-mode-map
   (when ruby-factory-girl-mode
-    (setq ruby-factory-mode--finder 'ruby-factory-mode--find-factory-girl-model)
-    (ruby-factory-mode--load-snippets 'ruby-factory-girl-mode)))
+    (setq ruby-factory--finder 'ruby-factory--find-factory-girl-model)
+    (ruby-factory--load-snippets 'ruby-factory-girl-mode)))
 
 (define-minor-mode ruby-factory-fabrication-mode
     "Minor mode for the Ruby Fabrication object generation library
@@ -64,8 +64,8 @@
 \\{ruby-factory-mode-map}"
   :lighter " Fabrication" :keymap ruby-factory-mode-map
   (when ruby-factory-fabrication-mode
-    (setq ruby-factory-mode--finder 'ruby-factory-mode--find-fabrication-model)
-    (ruby-factory-mode--load-snippets 'ruby-factory-fabrication-mode)))
+    (setq ruby-factory--finder 'ruby-factory--find-fabrication-model)
+    (ruby-factory--load-snippets 'ruby-factory-fabrication-mode)))
 
 (define-minor-mode ruby-factory-mode
   "Minor mode for Ruby test object generation libraries
@@ -73,52 +73,52 @@
 \\{ruby-factory-mode-map}"
   :lighter "" :keymap ruby-factory-mode-map
   (when ruby-factory-mode
-    (setq ruby-factory-mode--finder 'ruby-factory-mode--find-factory)))
+    (setq ruby-factory--finder 'ruby-factory--find-factory)))
 
-(defun ruby-factory-mode--factory= (name)
-  (and (string-match ruby-factory-mode--factory-regex (buffer-file-name))
+(defun ruby-factory--factory= (name)
+  (and (string-match ruby-factory--factory-regex (buffer-file-name))
        (string= (match-string 2 (buffer-file-name)) name)))
 
-(defun ruby-factory-mode--model-p ()
-  (string-match ruby-factory-mode--model-regex (buffer-file-name)))
+(defun ruby-factory--model-p ()
+  (string-match ruby-factory--model-regex (buffer-file-name)))
 
-(defun ruby-factory-mode--factory-girl-p ()
-  (ruby-factory-mode--factory= "factories"))
+(defun ruby-factory--factory-girl-p ()
+  (ruby-factory--factory= "factories"))
 
-(defun ruby-factory-mode--fabrication-p ()
-  (ruby-factory-mode--factory= "fabricators"))
+(defun ruby-factory--fabrication-p ()
+  (ruby-factory--factory= "fabricators"))
 
-(defun ruby-factory-mode--build-path (root &rest dirs)
+(defun ruby-factory--build-path (root &rest dirs)
   (apply 'concat (mapcar
 		  (lambda (name) (file-name-as-directory name))
 		  (push root dirs))))
 
-(defun ruby-factory-mode--model-path (root name)
-  (concat (ruby-factory-mode--build-path root "app" "models") name ".rb"))
+(defun ruby-factory--model-path (root name)
+  (concat (ruby-factory--build-path root "app" "models") name ".rb"))
 
-(defun ruby-factory-mode--factory-girl-factory-path (root name)
-  (concat (ruby-factory-mode--build-path root "factories")
+(defun ruby-factory--factory-girl-factory-path (root name)
+  (concat (ruby-factory--build-path root "factories")
 	  (concat (pluralize-string name) ".rb")))
 
-(defun ruby-factory-mode--fabrication-factory-path (root name)
-  (concat (ruby-factory-mode--build-path root "fabricators")
+(defun ruby-factory--fabrication-factory-path (root name)
+  (concat (ruby-factory--build-path root "fabricators")
 	  (concat name "_fabricator.rb")))
 
-(defun ruby-factory-mode--factory-girl-model-name (name)
+(defun ruby-factory--factory-girl-model-name (name)
   (singularize-string name))
 
-(defun ruby-factory-mode--factory-girl-model-path (root name)
-  (ruby-factory-mode--model-path root (ruby-factory-mode--factory-girl-model-name name)))
+(defun ruby-factory--factory-girl-model-path (root name)
+  (ruby-factory--model-path root (ruby-factory--factory-girl-model-name name)))
 
 
-(defun ruby-factory-mode--fabrication-model-name (name)
+(defun ruby-factory--fabrication-model-name (name)
   (replace-regexp-in-string  "_fabricator\\'" "" name t))
 
-(defun ruby-factory-mode--fabrication-model-path (root name)
-  (ruby-factory-mode--model-path root (ruby-factory-mode--fabrication-model-name name)))
+(defun ruby-factory--fabrication-model-path (root name)
+  (ruby-factory--model-path root (ruby-factory--fabrication-model-name name)))
 
-(defun ruby-factory-mode--find-model (factory-path action)
-  (when (string-match ruby-factory-mode--factory-regex factory-path)
+(defun ruby-factory--find-model (factory-path action)
+  (when (string-match ruby-factory--factory-regex factory-path)
     (let* ((root (match-string 1 factory-path))
 	   (name (match-string 3 factory-path))
 	   (model-path
@@ -126,18 +126,18 @@
       (when (file-exists-p model-path)
       model-path))))
 
-(defun ruby-factory-mode--find-fabrication-model (path)
-  (ruby-factory-mode--find-model path
+(defun ruby-factory--find-fabrication-model (path)
+  (ruby-factory--find-model path
 				 (lambda (root name)
-				   (ruby-factory-mode--fabrication-model-path root name))))
+				   (ruby-factory--fabrication-model-path root name))))
 
-(defun ruby-factory-mode--find-factory-girl-model (path)
-  (ruby-factory-mode--find-model path
+(defun ruby-factory--find-factory-girl-model (path)
+  (ruby-factory--find-model path
 				 (lambda (root name)
-				   (ruby-factory-mode--factory-girl-model-path root name))))
+				   (ruby-factory--factory-girl-model-path root name))))
 
-(defun ruby-factory-mode--find-factory (model-path)
-  (when (string-match ruby-factory-mode--model-regex model-path)
+(defun ruby-factory--find-factory (model-path)
+  (when (string-match ruby-factory--model-regex model-path)
     (let ((factory-path)
 	  (root (match-string 1 model-path))
 	  (name (match-string 2 model-path)))
@@ -145,44 +145,44 @@
 	(dolist (test '("spec" "test"))
 	  (dolist (factory '("factory-girl" "fabrication"))
 	    (setq factory-path
-		  (funcall (intern (format "ruby-factory-mode--%s-factory-path" factory))
-			   (ruby-factory-mode--build-path root test) name))
+		  (funcall (intern (format "ruby-factory--%s-factory-path" factory))
+			   (ruby-factory--build-path root test) name))
 	    (when (file-exists-p factory-path)
 	      (throw 'break factory-path))))
       nil))))
 
-(defun ruby-factory-mode--load-snippets (mode)
+(defun ruby-factory--load-snippets (mode)
   (when (require 'yasnippet nil t)
     (yas-load-directory ruby-factory--snippets)
     (yas-activate-extra-mode mode)
 
     (add-to-list 'yas-snippet-dirs ruby-factory--snippets t)))
 
-(defun ruby-factory-mode--maybe-enable ()
+(defun ruby-factory--maybe-enable ()
   (when (buffer-file-name)
     (cond
-     ((ruby-factory-mode--model-p)
+     ((ruby-factory--model-p)
       (ruby-factory-mode))
-     ((ruby-factory-mode--factory-girl-p)
+     ((ruby-factory--factory-girl-p)
       (ruby-factory-girl-mode))
-     ((ruby-factory-mode--fabrication-p)
+     ((ruby-factory--fabrication-p)
       (ruby-factory-fabrication-mode)))))
 
 ;; YASnippet helpers
 ;; ----
 ;; TODO: get "model" from outter factory definition
-(defun ruby-factory-mode--yas-factory-girl-model-name ()
+(defun ruby-factory--yas-factory-girl-model-name ()
   (if (buffer-file-name)
-      (ruby-factory-mode--factory-girl-model-name (file-name-base (buffer-file-name)))
+      (ruby-factory--factory-girl-model-name (file-name-base (buffer-file-name)))
     "model"))
 
-(defun ruby-factory-mode--yas-fabrication-model-name ()
+(defun ruby-factory--yas-fabrication-model-name ()
   (if (buffer-file-name)
-      (ruby-factory-mode--fabrication-model-name (file-name-base (buffer-file-name)))
+      (ruby-factory--fabrication-model-name (file-name-base (buffer-file-name)))
     "model"))
 ;; ---
 
-(defun ruby-factory-mode-switch-to-buffer ()
+(defun ruby-factory-switch-to-buffer ()
   (interactive)
   (let ((new-path)
 	(cur-path (buffer-file-name)))
@@ -190,11 +190,11 @@
     (if (null cur-path)
 	(message "Buffer has no file.")
 
-      (setq new-path (funcall ruby-factory-mode--finder cur-path))
+      (setq new-path (funcall ruby-factory--finder cur-path))
       (if (and new-path (file-exists-p new-path))
 	  (find-file new-path)
 	(message "Nothing to switch to.")))))
 
-(add-hook 'ruby-mode-hook 'ruby-factory-mode--maybe-enable)
+(add-hook 'ruby-mode-hook 'ruby-factory--maybe-enable)
 
 (provide 'ruby-factory-mode)
