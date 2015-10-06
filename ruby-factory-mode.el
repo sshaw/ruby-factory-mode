@@ -49,6 +49,7 @@
 (define-prefix-command 'ruby-factory-mode-map)
 (define-key 'ruby-factory-mode-map (kbd "C-c f t") 'ruby-factory-switch-to-buffer)
 
+;;;###autoload
 (define-minor-mode ruby-factory-girl-mode
   "Minor mode for the Ruby factory_girl object generation library
 
@@ -58,6 +59,7 @@
     (setq ruby-factory--finder 'ruby-factory--find-factory-girl-model)
     (ruby-factory--load-snippets 'ruby-factory-girl-mode)))
 
+;;;###autoload
 (define-minor-mode ruby-factory-fabrication-mode
     "Minor mode for the Ruby Fabrication object generation library
 
@@ -67,6 +69,7 @@
     (setq ruby-factory--finder 'ruby-factory--find-fabrication-model)
     (ruby-factory--load-snippets 'ruby-factory-fabrication-mode)))
 
+;;;###autoload
 (define-minor-mode ruby-factory-mode
   "Minor mode for Ruby test object generation libraries
 
@@ -158,6 +161,7 @@
 
     (add-to-list 'yas-snippet-dirs ruby-factory--snippets t)))
 
+;;;###autoload
 (defun ruby-factory--maybe-enable ()
   (when (buffer-file-name)
     (cond
@@ -195,6 +199,7 @@
 	  (find-file new-path)
 	(message "Nothing to switch to.")))))
 
+;;;###autoload
 (add-hook 'ruby-mode-hook 'ruby-factory--maybe-enable)
 
 (provide 'ruby-factory-mode)
