@@ -1,5 +1,6 @@
 # -*- mode: snippet -*-
 #name: transient do ... end
+#group: factory_girl
 # --
 transient do
   $0
