@@ -156,10 +156,12 @@
 
 (defun ruby-factory--load-snippets (mode)
   (when (require 'yasnippet nil t)
-    (yas-load-directory ruby-factory--snippets)
-    (yas-activate-extra-mode mode)
+    ;; Only want to call yas-load-directory once. Better way to check that's been loaded?
+    (when (not (member ruby-factory--snippets yas-snippet-dirs))
+      (yas-load-directory ruby-factory--snippets)
+      (add-to-list 'yas-snippet-dirs ruby-factory--snippets t))
 
-    (add-to-list 'yas-snippet-dirs ruby-factory--snippets t)))
+    (yas-activate-extra-mode mode)))
 
 ;;;###autoload
 (defun ruby-factory--maybe-enable ()
