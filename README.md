@@ -13,7 +13,19 @@ Pull requests welcome!
 
 ## Usage
 
+The preferred method of installation is via [a package](http://www.emacswiki.org/emacs/InstallingPackages). `ruby-factory-mode`
+~~is available~~ will be available on [MELPA](http://melpa.org).
+
+To do things the old fashioned way:
+
+```elisp
+(add-to-list 'load-path "/location/of/ruby-factory-mode")
+(require 'ruby-factory-mode)
+```
+
 `ruby-factory-mode` is enabled via `ruby-mode` when a Rails model or test factory is opened.
+
+If you're using RSpec it's recommended to use this with [rspec-mode](https://github.com/pezra/rspec-mode).
 
 ### Key Bindings
 
@@ -30,7 +42,7 @@ Binding | Snippet
 `aftc`  | `after :create do |model| ... end` |
 `afts`  | `after :stub do |model| ... end`   |
 `bef`   | `before :create do |model| ... end`|
-`deff`  | `FactoryGirl.define do ... end`    |
+`fg`    | `FactoryGirl.define do ... end`    |
 `fac`   | `factory :model do ... end`        |
 `initw` | `initialize_with { ... }`          |
 `seq`   | `sequence(:attribute) { |i| ... }` |
