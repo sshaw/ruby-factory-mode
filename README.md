@@ -38,7 +38,7 @@ If you're using RSpec it's recommended to use this with [rspec-mode](https://git
 Binding | Snippet
 --------|------------------------------------|
 `aft`   | `after :hook do |model| ... end`   |
-`aftb`  | `after :before do |model| ... end` |
+`aftb`  | `after :build do |model| ... end`  |
 `aftc`  | `after :create do |model| ... end` |
 `afts`  | `after :stub do |model| ... end`   |
 `bef`   | `before :create do |model| ... end`|
@@ -58,6 +58,10 @@ Binding | Snippet
 `aftb`  | `after_build do |model| ... end`        |
 `aftc`  | `after_create do |model| ... end`       |
 `aftv`  | `after_validation do |model| ... end`   |
+`bef`   | `before_hook do |model| ... end`        |
+`befc`  | `before_create do |model| ... end`      |
+`befs`  | `before_save do |model| ... end`        |
+`befv`  | `before_validation do |model| ... end`  |
 `fab`   | `Fabricator :model do ... end`          |
 `initw` | `initialize_with { ... }`               |
 `seq`   | `sequence(:attribute) { |i| ... }`      |
