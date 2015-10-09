@@ -1,7 +1,7 @@
 ;;; ruby-factory-mode.el --- Minor mode for Ruby test object generation libraries
 
 ;; Author: Skye Shaw <skye.shaw@gmail.com>
-;; Version: 0.0.1 (unreleased)
+;; Version: 0.0.1
 ;; URL: http://github.com/sshaw/ruby-factory-mode
 ;; Created: 2015
 ;; Keywords: ruby, rails, convenience
@@ -205,3 +205,4 @@
 (add-hook 'ruby-mode-hook 'ruby-factory--maybe-enable)
 
 (provide 'ruby-factory-mode)
+;;; ruby-factory-mode.el ends here
