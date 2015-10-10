@@ -4,8 +4,6 @@ Emacs minor mode for Ruby test object generation libraries. Currently supports
 [factory_girl](https://github.com/thoughtbot/factory_girl) and [Fabrication](https://github.com/paulelliott/fabrication)
 and only under Rails.
 
-Pull requests welcome!
-
 ## Requirements
 
 * [inflections](https://github.com/eschulte/jump.el)
@@ -13,23 +11,27 @@ Pull requests welcome!
 
 ## Usage
 
-The preferred method of installation is via [a package](http://www.emacswiki.org/emacs/InstallingPackages). `ruby-factory-mode`
+The preferred method of installation is via [a package](http://www.emacswiki.org/emacs/InstallingPackages). ruby-factory-mode
 ~~is available~~ will be available on [MELPA](http://melpa.org).
 
 To do things the old fashioned way:
 
 ```elisp
-(add-to-list 'load-path "/location/of/ruby-factory-mode")
-(require 'ruby-factory-mode)
+(add-to-list 'load-path "/location/of/ruby-factory")
+(require 'ruby-factory)
 ```
 
-`ruby-factory-mode` is enabled via `ruby-mode` when a Rails model or test factory is opened.
+To enable the mode automatically add a `ruby-mode-hook`:
+```elisp
+(add-hook 'ruby-mode-hook
+  (lambda () (ruby-factory-mode)))
+```
 
 If you're using RSpec it's recommended to use this with [rspec-mode](https://github.com/pezra/rspec-mode).
 
 ### Key Bindings
 
-<kbd>C-c f t</kbd> - Toggle model and factory
+<kbd>C-c , j</kbd> - **J**ump to the current buffer's model or factory
 
 ### Snippets
 

@@ -1,4 +1,4 @@
-;;; ruby-factory-mode.el --- Minor mode for Ruby test object generation libraries
+;;; ruby-factory.el --- Minor mode for Ruby test object generation libraries
 
 ;; Author: Skye Shaw <skye.shaw@gmail.com>
 ;; Version: 0.0.1
@@ -29,8 +29,12 @@
 ;; Emacs minor mode for Ruby test object generation libraries.
 ;; Currently supports factory_girl and Fabrication and only under Rails (for now).
 ;;
-;; Allows one to switch between factory and backing class, and provides
-;; snippets for all supported libraries via YASnippet.
+;; Allows one to switch between factory and backing class via `ruby-factory-switch-to-buffer'.
+;; YASnippet snippets are provided for all supported libraries.
+;;
+;; To enable the mode automatically add a `ruby-mode-hook`:
+;;  (add-hook 'ruby-mode-hook
+;;    (lambda () (ruby-factory-mode)))
 
 ;;; Code:
 
@@ -47,7 +51,7 @@
  (defvar ruby-factory--finder 'ruby-factory--find-factory))
 
 (define-prefix-command 'ruby-factory-mode-map)
-(define-key 'ruby-factory-mode-map (kbd "C-c f t") 'ruby-factory-switch-to-buffer)
+(define-key 'ruby-factory-mode-map (kbd "C-c , j") 'ruby-factory-switch-to-buffer)
 
 ;;;###autoload
 (define-minor-mode ruby-factory-girl-mode
@@ -56,8 +60,8 @@
 \\{ruby-factory-mode-map}"
   :lighter " Factory" :keymap ruby-factory-mode-map
   (when ruby-factory-girl-mode
-    (setq ruby-factory--finder 'ruby-factory--find-factory-girl-model)
-    (ruby-factory--load-snippets 'ruby-factory-girl-mode)))
+    (setq ruby-factory--finder 'ruby-factory--find-factory-girl-model))
+  (ruby-factory--toggle-yas 'ruby-factory-girl-mode))
 
 ;;;###autoload
 (define-minor-mode ruby-factory-fabrication-mode
@@ -66,16 +70,16 @@
 \\{ruby-factory-mode-map}"
   :lighter " Fabrication" :keymap ruby-factory-mode-map
   (when ruby-factory-fabrication-mode
-    (setq ruby-factory--finder 'ruby-factory--find-fabrication-model)
-    (ruby-factory--load-snippets 'ruby-factory-fabrication-mode)))
+    (setq ruby-factory--finder 'ruby-factory--find-fabrication-model))
+  (ruby-factory--toggle-yas 'ruby-factory-fabrication-mode))
 
 ;;;###autoload
-(define-minor-mode ruby-factory-mode
+(define-minor-mode ruby-factory-model-mode
   "Minor mode for Ruby test object generation libraries
 
 \\{ruby-factory-mode-map}"
   :lighter "" :keymap ruby-factory-mode-map
-  (when ruby-factory-mode
+  (when ruby-factory-model-mode
     (setq ruby-factory--finder 'ruby-factory--find-factory)))
 
 (defun ruby-factory--factory= (name)
@@ -154,25 +158,16 @@
 	      (throw 'break factory-path))))
       nil))))
 
-(defun ruby-factory--load-snippets (mode)
-  (when (require 'yasnippet nil t)
-    ;; Only want to call yas-load-directory once. Better way to check that's been loaded?
-    (when (not (member ruby-factory--snippets yas-snippet-dirs))
-      (yas-load-directory ruby-factory--snippets)
-      (add-to-list 'yas-snippet-dirs ruby-factory--snippets t))
+(defun ruby-factory--toggle-yas (mode)
+  (when (boundp 'yas-snippet-dirs)
+    (if (not (symbol-value mode))
+	(yas-deactivate-extra-mode mode)
+      ;; Only want to call yas-load-directory once. Better way to check that's been loaded?
+      (when (not (member ruby-factory--snippets yas-snippet-dirs))
+	(yas-load-directory ruby-factory--snippets)
+	(add-to-list 'yas-snippet-dirs ruby-factory--snippets t))
 
-    (yas-activate-extra-mode mode)))
-
-;;;###autoload
-(defun ruby-factory--maybe-enable ()
-  (when (buffer-file-name)
-    (cond
-     ((ruby-factory--model-p)
-      (ruby-factory-mode))
-     ((ruby-factory--factory-girl-p)
-      (ruby-factory-girl-mode))
-     ((ruby-factory--fabrication-p)
-      (ruby-factory-fabrication-mode)))))
+      (yas-activate-extra-mode mode))))
 
 ;; YASnippet helpers
 ;; ----
@@ -188,6 +183,22 @@
     "model"))
 ;; ---
 
+;;;###autoload
+(defun ruby-factory-mode (&optional prefix)
+  (interactive)
+  (when (buffer-file-name)
+    (let ((mode
+	   (cond
+	    ((ruby-factory--model-p)
+	     'ruby-factory-model-mode)
+	    ((ruby-factory--factory-girl-p)
+	     'ruby-factory-girl-mode)
+	    ((ruby-factory--fabrication-p)
+	     'ruby-factory-fabrication-mode))))
+      (if mode
+	  (call-interactively mode)))))
+
+;;;###autoload
 (defun ruby-factory-switch-to-buffer ()
   (interactive)
   (let ((new-path)
@@ -201,8 +212,5 @@
 	  (find-file new-path)
 	(message "Nothing to switch to.")))))
 
-;;;###autoload
-(add-hook 'ruby-mode-hook 'ruby-factory--maybe-enable)
-
-(provide 'ruby-factory-mode)
-;;; ruby-factory-mode.el ends here
+(provide 'ruby-factory)
+;;; ruby-factory.el ends here
