@@ -2,7 +2,7 @@
 
 Emacs minor mode for Ruby test object generation libraries. Currently supports
 [factory_girl](https://github.com/thoughtbot/factory_girl) and [Fabrication](https://github.com/paulelliott/fabrication)
-and only under Rails.
+and only under Rails (for now).
 
 ## Requirements
 
@@ -23,8 +23,7 @@ To do things the old fashioned way:
 
 To enable the mode automatically add a `ruby-mode-hook`:
 ```elisp
-(add-hook 'ruby-mode-hook
-  (lambda () (ruby-factory-mode)))
+(add-hook 'ruby-mode-hook 'ruby-factory-mode)
 ```
 
 If you're using RSpec it's recommended to use this with [rspec-mode](https://github.com/pezra/rspec-mode).
