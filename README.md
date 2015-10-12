@@ -1,5 +1,7 @@
 # ruby-factory-mode
 
+[![MELPA](http://melpa.org/packages/ruby-factory-badge.svg)](http://melpa.org/#/ruby-factory)
+
 Emacs minor mode for Ruby test object generation libraries. Currently supports
 [factory_girl](https://github.com/thoughtbot/factory_girl) and [Fabrication](https://github.com/paulelliott/fabrication)
 and only under Rails (for now).
@@ -11,8 +13,7 @@ and only under Rails (for now).
 
 ## Usage
 
-The preferred method of installation is via [a package](http://www.emacswiki.org/emacs/InstallingPackages). ruby-factory-mode
-~~is available~~ will be available on [MELPA](http://melpa.org).
+The preferred method of installation is via [a package](http://www.emacswiki.org/emacs/InstallingPackages). ruby-factory-mode is available on [MELPA](http://melpa.org).
 
 To do things the old fashioned way:
 
